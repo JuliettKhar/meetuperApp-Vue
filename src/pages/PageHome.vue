@@ -1,14 +1,13 @@
 <template>
   <div>
     <Hero />
-    <div v-if="pageLoader_isDataLoaded" class="container">
+    <div class="container">
       <section class="section">
       <div class="m-b-lg">
         <h1 class="title is-inline">Featured Meetups
-          <span v-if="ipLocation"> in {{ipLocation}}</span>
         </h1>
         <Dropdown />
-        <router-link v-if="user" :to="{name: 'PageMeetupCreate'}" class="button is-primary is-pulled-right m-r-sm">Create Meetups</router-link>
+        <router-link to="" class="button is-primary is-pulled-right m-r-sm">Create Meetups</router-link>
         <router-link :to="{name: 'PageMeetupFind'}"
                      class="button is-primary is-pulled-right m-r-sm">
                    All
@@ -16,18 +15,8 @@
       </div>
       <div class="row columns is-multiline">
         <!-- Iterate your meetups here! -->
-        <MeetupItem v-for="meetup in meetups"
-                    :key="meetup._id"
-                    :meetup="meetup" />
+
       </div>
-      <paginate
-        v-model="pagination.pageNum"
-        :page-count="pagination.pageCount"
-        :click-handler="fetchPaginatedMeetups"
-        :prev-text="'Prev'"
-        :next-text="'Next'"
-        :container-class="'paginationContainer'">
-      </paginate>
       </section>
       <section class="section">
         <div>
@@ -40,17 +29,29 @@
         </div>
       </section>
     </div>
-    <div v-else class="container">
-      <!-- <Spinner /> -->
-    </div>
   </div>
 </template>
 
 <script>
-// import Spinner from '@/components/shared/Spinner'
+import axios from 'axios'
+import CategoryItem from '@/components/CategoryItem'
+
 export default {
+  data() {
+    return {
+      categories: []
+    }
+  },
   components: {
-    // Spinner
+    CategoryItem
+  },
+
+  created () {
+    axios.get('/api/v1/categories')
+      .then ( res => {
+        this.categories = res.data
+        console.log(res)
+      })
   }
 }
 </script>
