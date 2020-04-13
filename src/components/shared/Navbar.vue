@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar is-spaced" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <router-link :to="'/'" class="navbar-item" href="https://bulma.io">
+      <router-link :to="'/'" class="navbar-item">
         <h1 class="title is-4">VueMeetuper</h1>
       </router-link>
       <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">

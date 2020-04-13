@@ -22,7 +22,6 @@
         </div>
 
         <div class="row columns is-multiline">
-          <!-- Iterate your meetups here! -->
           <MeetupItem v-for="meetup in meetups" :key="meetup._id" :meetup="meetup" />
         </div>
       </section>
@@ -58,7 +57,6 @@ export default {
   created() {
     axios.get("/api/v1/meetups").then(res => {
       this.meetups = res.data;
-      console.log(res);
     });
 
     axios.get("/api/v1/categories").then(res => {
