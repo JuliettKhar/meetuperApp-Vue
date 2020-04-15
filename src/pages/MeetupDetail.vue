@@ -8,7 +8,7 @@
           <article class="media v-center">
             <figure class="media-left">
               <p class="image is-64x64">
-                <img class="is-rounded"  :src="meetupCreator.avatar"/>
+                <img class="is-rounded" :src="meetupCreator.avatar" />
               </p>
             </figure>
             <div class="media-content">
@@ -23,7 +23,7 @@
         </div>
         <div class="is-pulled-right">
           <!-- We will handle this later (: -->
-          <button  class="button is-danger">Leave Meetup</button>
+          <button class="button is-danger">Leave Meetup</button>
         </div>
       </div>
     </section>
@@ -74,9 +74,9 @@
               <p class="menu-label">Who is Going</p>
               <div class="columns is-multiline is-mobile">
                 <!-- Joined People Images Here -->
-                <div  v-for="person in meetup.joinedPeople" :key="person._id" class="column is-3">
+                <div v-for="person in meetup.joinedPeople" :key="person._id" class="column is-3">
                   <figure class="image is-64x64">
-                    <img class="is-rounded"  :src="person.avatar" alt="Image" />
+                    <img class="is-rounded" :src="person.avatar" alt="Image" />
                   </figure>
                 </div>
               </div>
@@ -87,20 +87,18 @@
             <div class="content is-medium">
               <h3 class="title is-3">About the Meetup</h3>
               <p>{{meetup.description}}</p>
-              <button  class="button is-primary">Join In</button>
-              <button
-                class="button is-warning"
-              >You need authenticate in order to join</button>
+              <button class="button is-primary">Join In</button>
+              <button class="button is-warning">You need authenticate in order to join</button>
               <!-- <ThreadCreateModal
                 :title="'Create Thread'"
-              /> -->
+              />-->
             </div>
             <ThreadList :threads="threads" />
             <!-- <button
               v-if="!isAllThreadsLoaded"
               @click="fetchThreadsHandler"
               class="button is-primary"
-            >Load More Threads</button> -->
+            >Load More Threads</button>-->
           </div>
         </div>
       </div>
@@ -109,36 +107,29 @@
 </template>
 
 <script>
-import axios from "axios";
-import ThreadList from '@/components/ThreadList'
+import ThreadList from "@/components/ThreadList";
 
 export default {
-    data () {
-        return {
-            meetup: {},
-            threads: []
-        }
+  components: {
+    ThreadList
+  },
+  created() {
+    const meetupId = this.$route.params.id;
+    this.$store.dispatch("fetchMeetupById", meetupId);
+    this.$store.dispatch("fetchThreads", meetupId);
+  },
+  computed: {
+    meetupCreator() {
+      return this.meetup.meetupCreator | {};
     },
-    components: {
-        ThreadList
+    meetup() {
+      return this.$store.state.meetup;
     },
-    created () {
-        const meetupId = this.$route.params.id
-        axios.get(`/api/v1/meetups/${ meetupId }`)
-            .then( resp => this.meetup = resp.data )
-
-        axios.get(`/api/v1/threads?meetupId=${ meetupId }`)
-            .then ( resp => {
-                this.threads = resp.data
-            })
-    },
-    computed: {
-        meetupCreator () {
-            return this.meetup.meetupCreator | ''
-        }
+    threads() {
+      return this.$store.state.threads;
     }
-    
-}
+  }
+};
 </script>
 
 <style scoped lang="scss">

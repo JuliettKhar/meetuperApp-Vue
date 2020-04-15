@@ -14,7 +14,7 @@
                 class="button is-primary is-pulled-right m-r-sm"
               >Create Meetups</router-link>
               <router-link
-                :to="{name: 'PageMeetupFind'}"
+                :to="{name: 'MeetupFind'}"
                 class="button is-primary is-pulled-right m-r-sm"
               >All</router-link>
             </div>
@@ -38,30 +38,26 @@
 </template>
 
 <script>
-import axios from "axios";
 import CategoryItem from "@/components/CategoryItem";
 import MeetupItem from "@/components/MeetupItem";
 
 export default {
-  data() {
-    return {
-      categories: [],
-      meetups: []
-    };
-  },
   components: {
     CategoryItem,
     MeetupItem
   },
+  computed: {
+    meetups() {
+      return this.$store.getters.getMeetups;
+    },
 
+    categories() {
+      return this.$store.getters.getCategories;
+    }
+  },
   created() {
-    axios.get("/api/v1/meetups").then(res => {
-      this.meetups = res.data;
-    });
-
-    axios.get("/api/v1/categories").then(res => {
-      this.categories = res.data;
-    });
+    this.$store.dispatch("fetchMeetups");
+    this.$store.dispatch("fetchCategories");
   }
 };
 </script>

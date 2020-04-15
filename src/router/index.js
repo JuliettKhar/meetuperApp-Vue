@@ -19,6 +19,16 @@ Vue.use(VueRouter)
     path: '/meetups/:id',
     name: 'MeetupDetail',
     component: () => import(/* webpackChunkName: "MeetupDetail" */ '../pages/MeetupDetail')
+  },
+  {
+    path: '/find',
+    name: 'MeetupFind',
+    component: () => import(/* webpackChunkName: "MeetupFind" */ '../pages/MeetupFind')
+  },
+  {
+    path: '*',
+    name: 'NotFound',
+    component: () => import(/* webpackChunkName: "NotFound" */ '../pages/NotFound')
   }
 ]
 

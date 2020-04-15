@@ -17,7 +17,7 @@
           Home
         </router-link>
 
-        <router-link :to="{name: 'PageMeetupFind'}" class="navbar-item">
+        <router-link :to="{name: 'MeetupFind'}" class="navbar-item">
           Find
         </router-link>
 
