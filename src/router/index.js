@@ -29,6 +29,16 @@ Vue.use(VueRouter)
     path: '*',
     name: 'NotFound',
     component: () => import(/* webpackChunkName: "NotFound" */ '../pages/NotFound')
+  },
+  {
+    path: '/signIn',
+    name: 'signIn',
+    component: () => import(/* webpackChunkName: "signIn" */ '../pages/SignIn')
+  },
+  {
+    path: '/signUp',
+    name: 'signUp',
+    component: () => import(/* webpackChunkName: "signUp" */ '../pages/SignUp')
   }
 ]
 

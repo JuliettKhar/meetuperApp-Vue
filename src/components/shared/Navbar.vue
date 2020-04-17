@@ -66,10 +66,10 @@
         </div>
         <div  class="navbar-item has-dropdown ">
           <div class="buttons">
-            <router-link :to="{name: 'PageRegister'}" class="button is-primary">
+            <router-link :to="{name: 'signUp'}" class="button is-primary">
               <strong>Sign up</strong>
             </router-link>
-            <router-link :to="{name: 'PageLogin'}" class="button is-light">
+            <router-link :to="{name: 'signIn'}" class="button is-light">
               Log in
             </router-link>
           </div>
