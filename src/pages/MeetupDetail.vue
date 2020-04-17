@@ -1,5 +1,6 @@
 <template>
   <div class="meetup-detail-page">
+    <template v-if="isPageLoaded">
     <section class="hero">
       <div class="hero-body">
         <div class="container">
@@ -103,30 +104,45 @@
         </div>
       </div>
     </section>
+    </template>
+    <template v-else>
+        <Spinner />
+    </template>
   </div>
 </template>
 
 <script>
 import ThreadList from "@/components/ThreadList";
+import { mapActions, mapState } from 'vuex'
+import Spinner from '@/components/shared/Spinner'
+import { pageLoader } from '@/mixins/pageLoader'
 
 export default {
   components: {
-    ThreadList
+    ThreadList,
+    Spinner
+  },
+   mixins: [pageLoader],
+  methods: {
+    ...mapActions('meetups', ['fetchMeetupById']),
+    ...mapActions('threads', ['fetchThreads'])
   },
   created() {
     const meetupId = this.$route.params.id;
-    this.$store.dispatch("fetchMeetupById", meetupId);
-    this.$store.dispatch("fetchThreads", meetupId);
+    Promise.all([ this.fetchMeetupById(meetupId), this.fetchThreads(meetupId)])
+      .then(() => this.resolveData())
+      .catch((e) => {
+        this.resolveData()
+        throw new Error(e)
+      })
   },
   computed: {
+    ...mapState({
+        meetup: state => state.meetups.item,
+        threads: state => state.threads.items
+    }),
     meetupCreator() {
       return this.meetup.meetupCreator | {};
-    },
-    meetup() {
-      return this.$store.state.meetup;
-    },
-    threads() {
-      return this.$store.state.threads;
     }
   }
 };

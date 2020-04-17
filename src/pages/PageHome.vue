@@ -1,7 +1,7 @@
 <template>
   <div>
     <Hero />
-    <div class="container">
+    <div class="container" v-if="isPageLoaded">
       <section class="section">
         <div class="columns">
           <div class="column">
@@ -34,30 +34,44 @@
         </div>
       </section>
     </div>
+    <div v-else class="container">
+      <Spinner />
+    </div>
   </div>
 </template>
 
 <script>
 import CategoryItem from "@/components/CategoryItem";
 import MeetupItem from "@/components/MeetupItem";
+import { mapActions, mapState } from 'vuex'
+import Spinner from '@/components/shared/Spinner'
+import { pageLoader } from '@/mixins/pageLoader'
 
 export default {
   components: {
     CategoryItem,
-    MeetupItem
+    MeetupItem,
+    Spinner
   },
+  mixins: [pageLoader],
   computed: {
-    meetups() {
-      return this.$store.getters.getMeetups;
-    },
-
-    categories() {
-      return this.$store.getters.getCategories;
-    }
+    ...mapState({
+      meetups: state => state.meetups.items,
+      categories: state => state.categories.items
+    })
+  },
+  methods: {
+    ...mapActions('meetups', ['fetchMeetups']),
+    ...mapActions('categories', ['fetchCategories'])
   },
   created() {
-    this.$store.dispatch("fetchMeetups");
-    this.$store.dispatch("fetchCategories");
+    Promise.all([this.fetchMeetups(), this.fetchCategories()])
+      .then(() => this.resolveData())
+      .catch((e) => {
+        this.resolveData()
+        throw new Error(e)
+      })
+    
   }
 };
 </script>

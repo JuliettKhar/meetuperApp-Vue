@@ -5,11 +5,13 @@ import store from './store'
 import Dropdown from './components/shared/Dropdown'
 import Hero from './components/shared/Hero'
 import moment from 'moment'
+import Spinner from './components/shared/Spinner'
 
 Vue.config.productionTip = false
 
 Vue.component('Dropdown', Dropdown)
 Vue.component('Hero', Hero)
+Vue.component('Spinner', Spinner)
 
 Vue.filter('capitalize', function (value) {
   if (value && typeof value === 'string') {

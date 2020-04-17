@@ -32,7 +32,7 @@
         </div>
       </div>
     </div>
-    <div class="container">
+    <div class="container" v-if="isPageLoaded">
       <section class="section page-find">
         <div v-if="meetups && meetups.length > 0" class="columns cover is-multiline">
           <div
@@ -71,18 +71,37 @@
         </div>
       </section>
     </div>
+    <div v-else>
+      <Spinner />
+    </div>
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
+import Spinner from '@/components/shared/Spinner'
+import { pageLoader } from '@/mixins/pageLoader'
+
 export default {
   computed: {
-    meetups () {
-      return this.$store.state.meetups
-    }
+    ...mapState({
+      meetups: state => state.meetups.items
+    })
+  },
+  mixins: [pageLoader],
+  methods: {
+    ...mapActions('meetups', ['fetchMeetups'])
+  },
+  components: {
+    Spinner
   },
   created() {
-    this.$store.dispatch('fetchMeetups')
+    this.fetchMeetups()
+      .then(() => this.resolveData())
+      .catch((e) => {
+        this.resolveData()
+        throw new Error(e)
+      })
   }
 };
 </script>
