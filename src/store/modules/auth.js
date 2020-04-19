@@ -1,20 +1,53 @@
-/*eslint-disable */
 import axios from "axios"
 
 export default {
 	namespaced: true,
 
 	state: {
-		items: [],
+		user: null,
 	},
-	mutations: {},
+	getters: {
+		getAuthUser (state) {
+			return state.user || null
+		},
+		isAuthenticated (state) {
+			return !!state.user
+		}
+	},
+	mutations: {
+		setAuthUser (state, user) {
+			state.user = user;
+		}
+	},
 	actions: {
     signIn ( {commit}, payload) {
-      console.log(payload)
-    },
+			return axios.post('/api/v1/users/login', payload)
+				.then(res => {
+					const user = res.data;
+					commit('setAuthUser', user)
+				});
+		},
+		
+		logout ({commit}) {
+			return axios.post('/api/v1/users/logout')
+			.then( () => commit('setAuthUser', null) )
+			.catch( e => console.log(e))
+		},
 
-    signUp ( {commit}, payload) {
-      console.log(payload)
-    }
+    signUp ( payload) {
+      return axios.post('/api/v1/users/register', payload);
+		},
+		
+		getAuthUser ({commit}) {
+			return axios.get('/api/v1/users/me')
+			.then(res => {
+				const user = res.data;
+				commit('setAuthUser', user)
+			})
+			.catch(e => {
+				commit('setAuthUser', null)
+				return e
+			})
+		}
 	}
 }

@@ -30,6 +30,7 @@ export default {
     // }
   },
   created() {
+    this.$store.dispatch('auth/getAuthUser')
     // this.$store.dispatch('meta/fetchMetaData')
   }
 };

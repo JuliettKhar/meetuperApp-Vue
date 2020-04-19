@@ -93,7 +93,10 @@ export default {
     signIn () {
       this.$v.form.password.$touch()
       this.$store.dispatch('auth/signIn', this.form)
-      console.log(this.form)
+        .then(() => this.$router.push('/'))
+        .catch(e => {
+          throw new Error(e)
+        }) 
     }
   }
 };

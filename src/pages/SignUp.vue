@@ -65,7 +65,7 @@
                   />
                   <div class="form-error" v-if="$v.form.avatar.$error">
                     <span class="help is-danger" v-if="!$v.form.avatar.url">Url format is not valid!</span>
-                    <span class="help is-danger">Selected file type is not valid!</span>
+                    <span class="help is-danger" v-if="!$v.form.avatar.supportedFileTypes">Selected file type is not valid!</span>
                   </div>
                 </div>
               </div>
@@ -127,6 +127,7 @@
 
 <script>
 import { required, email, minLength, url, sameAs } from 'vuelidate/lib/validators'
+import { supportedFileTypes } from '@/helpers/validators'
 
 export default {
 	name: 'signUp',
@@ -155,8 +156,8 @@ export default {
           email
         },
         avatar: {
-          required,
-          url
+          url,
+          supportedFileTypes
         },
         password: {
           required,
@@ -176,7 +177,10 @@ export default {
       methods: {
     signUp () {
       this.$store.dispatch('auth/signUp', this.form)
-      console.log(this.form)
+        .then(() => this.$router.push('/signIn'))
+        .catch(e => {
+          throw new Error(e)
+        }) 
     }
   }
 }

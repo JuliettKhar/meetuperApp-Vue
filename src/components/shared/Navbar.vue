@@ -45,17 +45,17 @@
       </div>
 
       <div class="navbar-end">
-        <div class="navbar-item">
-          <div >
-            Welcome 
+        <div class="navbar-item" >
+          <div v-if="user">
+            Welcome, {{ user.name }} 
           </div>
         </div>
-        <div  class="navbar-item has-dropdown is-hoverable">
+        <div v-if="user" class="navbar-item has-dropdown is-hoverable" >
           <a class="navbar-link">
               Account
           </a>
           <div class="navbar-dropdown">
-            <router-link :to="{name: 'PageProfile'}" class="navbar-item">
+            <router-link :to="{name: 'Profile'}" class="navbar-item">
                 Profile
             </router-link>
             <hr class="navbar-divider">
@@ -64,7 +64,7 @@
             </a>
           </div>
         </div>
-        <div  class="navbar-item has-dropdown ">
+        <div v-else class="navbar-item has-dropdown">
           <div class="buttons">
             <router-link :to="{name: 'signUp'}" class="button is-primary">
               <strong>Sign up</strong>
@@ -80,7 +80,21 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
   export default {
+    computed: {
+      ...mapGetters({
+        user: 'auth/getAuthUser',
+        isAuthenticated: 'auth/isAuthenticated'
+
+      })
+    },
+    methods: {
+      logout () {
+        this.$store.dispatch('auth/logout')
+      }
+    }
   }
 </script>
 
