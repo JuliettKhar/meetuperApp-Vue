@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// import PageHome from '@/pages/PageHome'
-// import MeetupDetail from '@/pages/MeetupDetail'
+import store from '../store'
 
 Vue.use(VueRouter)
 
@@ -14,6 +13,12 @@ Vue.use(VueRouter)
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "PageHome" */ '../pages/PageHome')
+  },
+  {
+    path: '/meetups/secret',
+    name: 'secret',
+    component: () => import(/* webpackChunkName: "secter" */ '../pages/SecretPage'),
+    meta: { onlyAuthUser: true }
   },
   {
     path: '/meetups/:id',
@@ -33,12 +38,19 @@ Vue.use(VueRouter)
   {
     path: '/signIn',
     name: 'signIn',
-    component: () => import(/* webpackChunkName: "signIn" */ '../pages/SignIn')
+    component: () => import(/* webpackChunkName: "signIn" */ '../pages/SignIn'),
+    meta: { onlyGuestUser: true }
   },
   {
     path: '/signUp',
     name: 'signUp',
-    component: () => import(/* webpackChunkName: "signUp" */ '../pages/SignUp')
+    component: () => import(/* webpackChunkName: "signUp" */ '../pages/SignUp'),
+    meta: { onlyGuestUser: true }
+  },
+  {
+    path: '/401',
+    name: 'notAuthenticated',
+    component: () => import(/* webpackChunkName: "c" */ '../pages/NotAuthenticated')
   }
 ]
 
@@ -47,5 +59,34 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  store.dispatch('auth/getAuthUser')
+    .then(() => {
+      const isAuthenticated = store.getters['auth/isAuthenticated'];
+      
+      if (to.meta.onlyAuthUser) {
+      
+        if(isAuthenticated) {
+          next()
+        } else {
+          next({name: 'notAuthenticated'})
+        }
+
+      } else if (to.meta.onlyGuestUser) {
+        if (isAuthenticated) {
+          next({ name: 'PageHome'})
+        } else {
+          next()
+        }
+
+      }
+      else {
+        next()
+      }
+    })
+})
+
+
 
 export default router

@@ -29,6 +29,8 @@ Vue.filter( 'formatDate', function (value, format = 'LL') {
   return moment(value).format(format)
 })
 
+
+
 new Vue({
   router,
   store,

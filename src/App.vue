@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-if="isAuthResolved">
     <Navbar />
     <div class="page-wrapper">
       <router-view :key="$route.path" />
@@ -22,15 +22,15 @@ export default {
     // Spinner
   },
   computed: {
-    // isAuthResolved () {
-    //   return this.$store.state.auth.isAuthResolved
-    // },
+    isAuthResolved () {
+      return this.$store.state.auth.isAuthResolved
+    },
     // isLocationResolved () {
     //   return this.$store.state.meta.isLocationResolved
     // }
   },
   created() {
-    this.$store.dispatch('auth/getAuthUser')
+    // this.$store.dispatch('auth/getAuthUser')
     // this.$store.dispatch('meta/fetchMetaData')
   }
 };
